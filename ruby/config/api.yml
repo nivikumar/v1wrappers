@@ -1,0 +1,8 @@
+# Config file for the VerticalResponse API
+
+access_token: 'YOUR_ACCESS_TOKEN'
+client_id: 'YOUR_CLIENT_ID'
+# TODO: write the correct values for the production API
+host: 'localhost'
+port: '5000'
+protocol: 'http'
