@@ -21,7 +21,7 @@
 #   ruby examples/errors.rb
 
 require 'pp'
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'list'))
+require_relative '../lib/list'
 
 def display_result(message, result)
   puts message

@@ -7,52 +7,41 @@
 # approach for an object oriented solution that you can expand according to
 # your needs.
 
-require File.expand_path(File.join(File.dirname(__FILE__), 'client'))
+require_relative 'message'
 
 module VerticalResponse
   module API
     class Contact < Client
       class << self
         # Base URI for the Contact resource
-        def resource_uri(id = nil)
-          uri = File.join(base_uri.to_s, 'contacts')
-          uri = File.join(uri, id.to_s) if id
-          uri
+        def base_uri(*args)
+          @base_uri ||= File.join(super.to_s, 'contacts')
         end
 
-        # Returns all of the user's contacts
-        def all(options = {})
-          uri = uri_with_options(resource_uri, options)
-          response = Response.new get(uri)
-
-          response.handle_collection do |response_item|
-            Contact.new(response_item)
-          end
-        end
-
-        # Returns a user's contact based on its ID
-        def find(id, options = {})
-          uri = uri_with_options(resource_uri(id), options)
-          response = Response.new get(uri)
-
-          Contact.new(response)
-        end
-
-        # Creates a contact with the parameters provided
-        def create(params)
-          response = Response.new post(
-            resource_uri,
-            build_params(params)
-          )
+        def fields(options = {})
+          uri = uri_with_options(File.join(resource_uri, 'fields'), options)
+          Response.new get(uri)
         end
       end
 
-      # Returns the details for a contact as a new instance of the Contact class
-      def details(options = {})
-        uri = self.class.uri_with_options(response.url, options)
-        response = Response.new self.class.get(uri)
+      # Remove methods that are not supported by the Contact API.
+      # Contact does not support the 'stats' method for now
+      exclude_methods :stats
 
-        Contact.new(response)
+      def initialize(*args)
+        super
+        @list_class = self.class.class_for_resource(List, id)
+        @message_class = self.class.class_for_resource(Message, id)
+      end
+
+      # Returns all the lists this contact belongs to
+      def lists(options = {})
+        @list_class.all(options)
+      end
+
+      # Returns all the messages targetted to the current contact
+      def messages(options = {})
+        @message_class.all(options)
       end
     end
   end

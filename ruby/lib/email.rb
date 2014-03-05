@@ -1,51 +1,53 @@
-# Class that represents a list resource from the VerticalResponse API.
+# Class that represents an email resource from the VerticalResponse API.
 # It has the ability to make REST calls to the API, as well as to wrap
-# the list objects we get as response.
+# the email objects we get as response.
 #
 # NOTE: This class does not necessarily include all the available methods
-# the API has for the list resource. You can consider this an initial approach
+# the API has for the email resource. You can consider this an initial approach
 # for an object oriented solution that you can expand according to your needs.
 
-require File.expand_path(File.join(File.dirname(__FILE__), 'list'))
+require_relative 'client'
+require_relative 'list'
 
 module VerticalResponse
   module API
     class Email < Client
       class << self
         # Base URI for the Email resource
-        def resource_uri(*additional_paths)
-          uri = File.join(base_uri.to_s, 'messages', 'emails')
-          if additional_paths.any?
-            # Convert all additional paths to string
-            additional_paths = additional_paths.map(&:to_s)
-            uri = File.join(uri, *additional_paths)
-          end
-          uri
+        def base_uri(*args)
+          @base_uri ||= File.join(super.to_s, 'messages', 'emails')
         end
 
-        # Returns a user's email based on its ID
-        def find(id, options = {})
-          uri = uri_with_options(resource_uri(id), options)
-          response = Response.new get(uri)
-
-          Email.new(response)
+        # Overwrite from parent class since it's a special type of
+        # resource name (with messages at the beginning)
+        def resource_name
+          'messages/emails'
         end
 
-        # Creates an email with the parameters provided
-        def create(params)
-          Response.new post(
-            resource_uri,
-            build_params(params)
-          )
+        # The Email API does not support the 'all' method on its own for now.
+        # To get all emails we need to do it through the Message API
+        def all(options = {})
+          Message.all(options.merge({ :message_type => MESSAGE_TYPE }))
         end
       end
 
-      # Returns the details for an email as a new instance of the Email class
-      def details(options = {})
-        uri = self.class.uri_with_options(response.url, options)
-        response = Response.new self.class.get(uri)
+      MESSAGE_TYPE = 'email'
 
-        Email.new(response)
+      def initialize(*args)
+        super
+        @list_class = self.class.class_for_resource(List, id)
+      end
+
+      # Returns all the lists this email is targeted to
+      def lists(options = {})
+        @list_class.all(options)
+      end
+
+      def test_launch(params = {})
+        Response.new self.class.post(
+          self.class.resource_uri(id, 'test'),
+          self.class.build_params(params)
+        )
       end
 
       # Launches an email and return the response object
@@ -67,14 +69,10 @@ module VerticalResponse
         )
       end
 
-      # Returns the summary stats for an email
-      def summary_stats(options = {})
-        uri = self.class.uri_with_options(
-          self.class.resource_uri(id, 'stats'),
-          options
+      def unschedule
+        Response.new self.class.post(
+          self.class.resource_uri(id, 'unschedule')
         )
-
-        Response.new self.class.get(uri)
       end
     end
   end

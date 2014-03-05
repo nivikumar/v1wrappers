@@ -6,75 +6,66 @@
 # the API has for the list resource. You can consider this an initial approach
 # for an object oriented solution that you can expand according to your needs.
 
-require File.expand_path(File.join(File.dirname(__FILE__), 'contact'))
+require_relative 'contact'
 
 module VerticalResponse
   module API
     class List < Client
       class << self
         # Base URI for the List resource
-        def resource_uri(id = nil)
-          uri = File.join(base_uri.to_s, 'lists')
-          uri = File.join(uri, id.to_s) if id
-          uri
-        end
-
-        # Base URI for the Contact resource, but nested inside the List resource
-        def contacts_uri(list_id)
-           File.join(resource_uri(list_id), 'contacts')
-        end
-
-        # Returns all of the user's lists
-        def all(options = {})
-          uri = uri_with_options(resource_uri, options)
-          response = Response.new get(uri)
-
-          response.handle_collection do |response_item|
-            List.new(response_item)
-          end
-        end
-
-        # Returns a user's list based on its ID
-        def find(id, options = {})
-          uri = uri_with_options(resource_uri(id), options)
-          response = Response.new get(uri)
-
-          List.new(response)
-        end
-
-        # Creates a list with the parameters provided
-        def create(params)
-          Response.new post(
-            resource_uri,
-            build_params(params)
-          )
+        def base_uri(*args)
+          @base_uri ||= File.join(super.to_s, 'lists')
         end
       end
 
-      # Returns the details for a list as a new instance of the List class
-      def details(options = {})
-        uri = self.class.uri_with_options(response.url, options)
-        response = Response.new self.class.get(uri)
+      # Remove methods that are not supported by the List API.
+      # List does not support the 'stats' method for now
+      exclude_methods :stats
 
-        List.new(response)
+      def initialize(*args)
+        super
+        @contact_class = self.class.class_for_resource(Contact, id)
+        @message_class = self.class.class_for_resource(Message, id)
+      end
+
+      # Returns all the messages targetted to the current list
+      def messages(options = {})
+        @message_class.all(options)
       end
 
       # Returns all the contacts that belong to the list
       def contacts(options = {})
-        uri = self.class.uri_with_options(self.class.contacts_uri(id), options)
-        response = Response.new self.class.get(uri)
+        @contact_class.all(options)
+      end
 
-        response.handle_collection do |response_item|
-          Contact.new(response_item)
-        end
+      def find_contact(contact_id, options = {})
+        @contact_class.find(contact_id, options)
       end
 
       # Creates a contact for the list with the parameters provided
       def create_contact(params)
-        uri = self.class.contacts_uri(id)
-        Response.new self.class.post(
-          uri,
-          self.class.build_params(params)
+        @contact_class.create(params)
+      end
+
+      # Creates contacts in batch for the list with the parameters provided
+      def create_contacts(params)
+        params = { :contacts => params } if params.is_a?(Array)
+        @contact_class.create(params)
+      end
+
+      # Deletes a contact from the list
+      def delete_contact(contact)
+        # Make a copy of the original contact but embedding the request
+        # within the list resource
+        contact_to_delete = @contact_class.new(contact.response)
+        contact_to_delete.delete
+      end
+
+      # Deletes contacts in batch from the list
+      def delete_contacts(contact_emails)
+        Response.new @contact_class.delete(
+          @contact_class.resource_uri,
+          self.class.build_params({ :contacts => contact_emails })
         )
       end
     end

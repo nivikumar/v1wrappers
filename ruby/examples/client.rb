@@ -22,11 +22,11 @@
 # To run this example, simply execute this file with Ruby. e.g.
 #   ruby examples/client.rb
 #
-# Checkout the other examples (lists.rb and contacts.rb) to see how to perform
+# Checkout the other examples (e.g. lists.rb or contacts.rb) to see how to perform
 # some of these actions in an object oriented way.
 
 require 'pp'
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'client'))
+require_relative '../lib/client'
 
 def display_result(message, result)
   puts message

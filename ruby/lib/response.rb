@@ -1,7 +1,7 @@
 # Class that represents the response you can get from calling any action
 # of the VerticalResponse API.
 
-require File.expand_path(File.join(File.dirname(__FILE__), 'error'))
+require_relative 'error'
 
 module VerticalResponse
   module API
