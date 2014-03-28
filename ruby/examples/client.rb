@@ -123,7 +123,10 @@ created_email_raw_response = client_class.post(
       :street_address => '50 Beale St.',
       :locality => 'San Francisco',
       :region => 'California',
-      :postal_code => '94105'
+      :postal_code => '94105',
+      :from => 'test@verticalresponse.com',
+      :from_label => 'test@verticalresponse.com',
+      :reply_to => 'test@verticalresponse.com'
     }
   )
 )

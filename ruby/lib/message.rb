@@ -11,7 +11,7 @@ require_relative 'social_post'
 
 module VerticalResponse
   module API
-    class Message < Client
+    class Message < Resource
       class << self
         # Base URI for the Message resource
         def base_uri(*args)

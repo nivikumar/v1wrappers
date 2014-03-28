@@ -6,12 +6,12 @@
 # the API has for the social post resource. You can consider this an initial approach
 # for an object oriented solution that you can expand according to your needs.
 
-require_relative 'client'
+require_relative 'resource'
 require_relative 'message'
 
 module VerticalResponse
   module API
-    class SocialPost < Client
+    class SocialPost < Resource
       class << self
         # Base URI for the Email resource
         def base_uri(*args)

@@ -1,8 +1,14 @@
-# Config file for the VerticalResponse API
+# Config file for the VerticalResponse API client
 
+# Host info
+host: 'vrapi.verticalresponse.com'
+port: 
+protocol: 'https'
+
+# User authentication info
 access_token: 'YOUR_ACCESS_TOKEN'
 client_id: 'YOUR_CLIENT_ID'
-# TODO: write the correct values for the production API
-host: 'localhost'
-port: '5000'
-protocol: 'http'
+
+# Oauth info (you only need to fill in this info if you're making OAuth calls)
+oauth_redirect_uri: 'YOUR_APP_URL'
+

@@ -725,3 +725,36 @@ Sample 41. Getting the summary stats for a social post (GET request to *{{ API r
   social_post = VerticalResponse::API::SocialPost.find(<Social Post ID>)
   social_post.stats
   ```
+
+
+## Authentication with OAuth
+
+*See http://verticalresponse.mashery.com/docs/read/Authentication to
+know more details about API authentication with OAuth.*
+
+Sample 42. Authorizing a client ID that is already linked to an app (GET request to *{{ API root }}/oauth/authorize?client_id={{ client ID }}&redirect_uri={{ redirect URI }}*)
+
+  ```ruby
+  require 'oauth'
+
+  VerticalResponse::API::OAuth.authorize(<Redirect URI>, <Client ID>)
+
+  # This call will redirect you to a signin page, so you might want to render
+  # the response if you're calling this from a controller.
+  # For example, in Rails you can do something like:
+  render :text => VerticalResponse::API::OAuth.authorize(<Redirect URI>, <Client ID>)
+  ```
+
+Sample 43. Getting the access token for a client ID that has already been authorized (GET request to *{{ API root }}/oauth/access_token?client_id={{ client ID }}&client_secret={{ client secret }}&code={{ auth code }}&redirect_uri={{ redirect URI }}*)
+
+  ```ruby
+  require 'oauth'
+
+  # The response is a HTTParty::Response object that could contain either
+  # JSON or HTML formatted text, so you should have code to handle the
+  # response either way.
+  VerticalResponse::API::OAuth.access_token(
+    <Client Secret>, <Auth Code>, <Redirect URI>, <Client ID>
+  )
+  ```
+

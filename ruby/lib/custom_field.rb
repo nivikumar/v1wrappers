@@ -6,11 +6,11 @@
 # the API has for the custom field resource. You can consider this an initial approach
 # for an object oriented solution that you can expand according to your needs.
 
-require_relative 'client'
+require_relative 'resource'
 
 module VerticalResponse
   module API
-    class CustomField < Client
+    class CustomField < Resource
       class << self
         # Base URI for the Message resource
         def base_uri(*args)

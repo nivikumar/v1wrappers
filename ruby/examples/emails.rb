@@ -47,7 +47,10 @@ email_create_params = {
   :street_address => '50 Beale St.',
   :locality => 'San Francisco',
   :region => 'California',
-  :postal_code => '94105'
+  :postal_code => '94105',
+  :from => 'test@verticalresponse.com',
+  :from_label => 'test@verticalresponse.com',
+  :reply_to => 'test@verticalresponse.com'
 }
 created_email = VerticalResponse::API::Email.create(
   email_create_params

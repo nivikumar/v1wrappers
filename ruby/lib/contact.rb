@@ -11,7 +11,7 @@ require_relative 'message'
 
 module VerticalResponse
   module API
-    class Contact < Client
+    class Contact < Resource
       class << self
         # Base URI for the Contact resource
         def base_uri(*args)
@@ -19,7 +19,7 @@ module VerticalResponse
         end
 
         def fields(options = {})
-          uri = uri_with_options(File.join(resource_uri, 'fields'), options)
+          uri = uri_with_options(resource_uri('fields'), options)
           Response.new get(uri)
         end
       end

@@ -6,12 +6,12 @@
 # the API has for the email resource. You can consider this an initial approach
 # for an object oriented solution that you can expand according to your needs.
 
-require_relative 'client'
+require_relative 'resource'
 require_relative 'list'
 
 module VerticalResponse
   module API
-    class Email < Client
+    class Email < Resource
       class << self
         # Base URI for the Email resource
         def base_uri(*args)

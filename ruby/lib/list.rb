@@ -10,7 +10,7 @@ require_relative 'contact'
 
 module VerticalResponse
   module API
-    class List < Client
+    class List < Resource
       class << self
         # Base URI for the List resource
         def base_uri(*args)
