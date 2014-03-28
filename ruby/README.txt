@@ -11,6 +11,9 @@ API calls VR provides, please refer to the documentation.
 This software is provided "as-is", please note that VerticalResponse will not
 maintain or update this.
 
+See http://developer.verticalresponse.com/docs to know more details about
+the VR API.
+
 
 Dependencies
 ------------
@@ -30,23 +33,58 @@ Features
 
 This wrapper allows you to:
 
-1. Make Contact-related operations:
-   - Create a contact
-   - Get a list of all your contacts
-   - Get the details of a particular contact
+1. Authenticate with the API using OAuth:
+   - Authorize a client ID that is already linked to an app
+   - Get the access token for a client ID that has already been authorized
 
-2. Make List-related operations:
+2. Make Contact-related operations:
+   - Create a contact
+   - Update a contact
+   - Delete a contact
+   - Get a list of all your contacts
+   - Find contacts by several search criteria
+   - Get the details of a particular contact
+   - Get all the lists a contact is part of
+   - Get all the messages targetted to a contact
+   - Get all the contact field names
+
+3. Make List-related operations:
    - Create a list
+   - Update a list
+   - Delete a list
    - Get all of your lists
    - Get the details of a particular list
    - Create a contact in a particular list
+   - Remove a contact from a particular list
+   - Batch create contacts in a particular list
+   - Batch remove contacts from a particular list
+   - Find a contact in a list
+   - Get all the messages targetted to a list
 
-3. Make Email-related operations:
+4. Make Custom field-related operations:
+   - Create a custom field
+   - Update a custom field
+   - Delete a custom field
+   - Get a list of all your custom fields
+
+5. Make messages-related operations:
+   - Get a list of all your messages
+   - Find messages by several search criteria
+
+6. Make Email-related operations:
    - Create an email
-   - Look for an email based on its ID
+   - Update an email
+   - Delete an email
    - Get the details of a particular email
-   - Launch an existing email
+   - Perform a launch test for an existing email
+   - Launch/schedule an existing email
+   - Unschedule a previously scheduled email
+   - Get all the lists an email is targetted to
    - Get the summary stats of a particular email
+
+7. Make Social post-related operations:
+   - Get the details of a particular social post
+   - Get the summary stats of a particular social post
 
 All of these can be done in an object oriented way, or by making direct REST
 calls to the API through the Client class.
@@ -68,11 +106,14 @@ Examples
 An "examples" folder is provided in order to give you guidance about how to use
 this wrapper. In this folder you will find the following files:
 
-  - client.rb:    Provides examples on how to perform general operations.
-  - emails.rb:    Provides examples on how to perform email-related operations.
-  - lists.rb:     Provides examples on how to perform list-related operations.
-  - contacts.rb:  Provides examples on how to perform contact-related operations.
-  - errors.rb:    Provides examples on how to handle errors related to this wrapper.
+  - client.rb:        Provides examples on how to perform general operations.
+  - lists.rb:         Provides examples on how to perform list-related operations.
+  - contacts.rb:      Provides examples on how to perform contact-related operations.
+  - custom_fields.rb: Provides examples on how to perform custom field-related operations.
+  - messages.rb:      Provides examples on how to perform messages-related operations.
+  - emails.rb:        Provides examples on how to perform email-related operations.
+  - social_posts.rb:  Provides examples on how to perform social post-related operations.
+  - errors.rb:        Provides examples on how to handle errors related to this wrapper.
 
 You can find more details of each example inside those files.
 
