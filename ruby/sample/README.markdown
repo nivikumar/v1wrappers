@@ -105,6 +105,33 @@ Sample 5. Searching contacts (GET request to *{{ API root }}/contacts*)
   )
   ```
 
+Sample 5.1. Search contacts by status (GET request to *{{ API root }}/contacts*)
+
+  ```ruby
+  require 'contact'
+
+  # List all inactive contacts (bounced and unsubscribed)
+  VerticalResponse::API::Contact.all({ :status => 'inactive' })
+
+  # List bounced contacts only
+  VerticalResponse::API::Contact.all({ :status => 'bounced' })
+
+  # List unsubscribed contacts only
+  VerticalResponse::API::Contact.all({ :status => 'unsubscribed' })
+
+  # You can additionally specify any of the other options to filter the
+  # search even more. The following code will list all details of all the
+  # inactive contacts that were created within a specific date range:
+  VerticalResponse::API::Contact.all(
+    {
+      :status => 'inactive',
+      :type => :all,
+      :created_since => '2014-01-01',
+      :created_until => '2014-12-31'
+    }
+  )
+  ```
+
 Sample 6. Getting details of a contact (GET request to *{{ API root }}/contacts/{{ contact ID }}*)
 
   ```ruby
