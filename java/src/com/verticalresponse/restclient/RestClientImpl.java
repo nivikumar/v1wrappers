@@ -30,15 +30,13 @@ import com.verticalresponse.restclient.reader.XMLResponseReader;
  * Handles the response by delegating to the respective readers.
  */
 public class RestClientImpl implements IRestClient {
-	private String clientId;
 	private String accessToken;
 	private HttpResponse response = null;
 
 	/*
 	 * Constructor
 	 */
-	public RestClientImpl(String clientId, String accessToken) {
-		this.clientId = clientId;
+	public RestClientImpl(String accessToken) {
 		this.accessToken = accessToken;
 	}
 
@@ -61,6 +59,9 @@ public class RestClientImpl implements IRestClient {
 		 * 6. Close the HttpClient connection
 		 */
 
+		// Add the access token as part of the URL
+		url = url + "?access_token=" + this.accessToken;
+		
 		// Configure the Connection Timeout
 		RequestConfig requestConfig = RequestConfig.custom()
 				.setSocketTimeout( 5000 )
@@ -221,8 +222,6 @@ public class RestClientImpl implements IRestClient {
 		headers.put( "Accept", "application/json" );
 		headers.put( "Content-Type", "application/json" );
 		headers.put( "Charset", "UTF-8" );
-		headers.put( "X-Mashery-Oauth-Client-Id", this.clientId );
-		headers.put( "X-Mashery-Oauth-Access-Token", this.accessToken );
 	
 	    return headers;
 	}

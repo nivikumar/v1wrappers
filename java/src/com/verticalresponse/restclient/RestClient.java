@@ -23,9 +23,7 @@ public class RestClient {
 	// Base API url
 	public String baseApiUrl;
 
-	// Client Id and Access Token needs to be filled in with for making the
-	// api calls.  These values will be added to the http request header.
-	private String clientId;
+	// Access Token needs to be filled in for making the api calls.
 	private String accessToken;
 
 	public RestClient() throws Exception {
@@ -33,10 +31,9 @@ public class RestClient {
 		Properties prop = new Properties();
 
 		//load a properties file
-    prop.load( this.getClass().getClassLoader().getResourceAsStream("config.properties") );
+		prop.load( this.getClass().getClassLoader().getResourceAsStream("config.properties") );
 
 		baseApiUrl = prop.getProperty("base_api_url");
-		clientId = prop.getProperty("client_id");
 		accessToken = prop.getProperty("access_token");
 	}
 
@@ -47,7 +44,7 @@ public class RestClient {
 	 * @throws Exception
 	 */
 	public String createContactList(ContactList list) throws Exception {
-		RestClientImpl clientService = new RestClientImpl(clientId, accessToken);
+		RestClientImpl clientService = new RestClientImpl(accessToken);
 
 		String listUrl = baseApiUrl + "/lists";
 
@@ -70,7 +67,7 @@ public class RestClient {
 	 * @return A string representation of the JSON result - The contact that was created.
 	 */
 	public String createContact(Contact contact, String listUrl) throws Exception {
-		RestClientImpl clientService = new RestClientImpl(clientId, accessToken);
+		RestClientImpl clientService = new RestClientImpl(accessToken);
 
 		// Create a json object with contact properties
 		JSONObject contactJsonProp = new JSONObject();
@@ -90,7 +87,7 @@ public class RestClient {
 	 * @return A string representation of the JSON result - The list of contacts in the list.
 	 */
 	public String getAllContacts(String listUrl) throws Exception {
-		RestClientImpl client = new RestClientImpl(clientId, accessToken);
+		RestClientImpl client = new RestClientImpl(accessToken);
 
 		String listContactUrl = listUrl + "/contacts";
 		String jsonResult = client.execute(listContactUrl, IRestClient.GET, null);
@@ -114,7 +111,7 @@ public class RestClient {
 	 * @return A string representation of the JSON result - Attributes of the contact based on the passed in type parameter.
 	 */
 	public String getContact(String contactUrl, String type) throws Exception {
-		RestClientImpl clientService = new RestClientImpl(clientId, accessToken);
+		RestClientImpl clientService = new RestClientImpl(accessToken);
 
 		List<NameValuePair> queryParams = new ArrayList<NameValuePair>();
 		queryParams.add(new BasicNameValuePair("type", type));
@@ -131,6 +128,10 @@ public class RestClient {
 	// Check for an error response
 	public boolean hasError(String jsonString) {
 		try {
+			if(jsonString.contains("Gateway Timeout")) {
+				return true;
+			}
+			
 			ObjectMapper mapper = new ObjectMapper();
 			ObjectNode root = (ObjectNode) mapper.readTree(jsonString);
 			if( root.has("error") ) {
